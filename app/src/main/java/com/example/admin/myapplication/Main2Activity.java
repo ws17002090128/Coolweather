@@ -24,11 +24,11 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         this.textView=(TextView)findViewById(R.id.main2);
-        this.button=(Button)findViewById(R.id.ab);
+        this.button=(Button)findViewById(R.id.button2);
         this.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Main2Activity.this,MainActivity.class));
+                startActivity(new Intent(Main2Activity.this,Main3Activity.class));
             }
         });
 
