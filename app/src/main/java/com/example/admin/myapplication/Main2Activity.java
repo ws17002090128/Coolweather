@@ -1,14 +1,14 @@
 package com.example.admin.myapplication;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -16,17 +16,23 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
-    private Button button;
+public class Main2Activity extends AppCompatActivity {
     private TextView textView;
+    private Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        this.textView=(TextView)findViewById(R.id.main1);
+        setContentView(R.layout.activity_main2);
+        this.textView=(TextView)findViewById(R.id.main2);
+        this.button=(Button)findViewById(R.id.ab);
+        this.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Main2Activity.this,MainActivity.class));
+            }
+        });
 
-        String weatherId="CN101210501";
-        String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=637a3695bb4f4af28976a6f2795553c6";
+        String weatherUrl = "http://guolin.tech/api/china";
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
@@ -39,11 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                       textView.setText(responseText);
+                        textView.setText(responseText);
                     }
                 });
 
             }
         });
     }
+
 }
