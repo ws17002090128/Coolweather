@@ -10,11 +10,19 @@
         android:id="@+id/main2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
+
     <Button
         android:id="@+id/button2"
-        android:text="去地级市"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="去地级市" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="441dp">
+
+    </ListView>
 
 
 </android.support.design.widget.CoordinatorLayout>
