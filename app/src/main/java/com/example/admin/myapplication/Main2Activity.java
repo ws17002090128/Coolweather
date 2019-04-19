@@ -6,7 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,7 +25,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class Main2Activity extends AppCompatActivity {
-    private String[] data={"北京","浙江","安徽"};
+    private int[] pids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    private String[] data={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
     private ListView listView;
     private TextView textView;
     private Button button;
@@ -42,7 +45,15 @@ public class Main2Activity extends AppCompatActivity {
                 startActivity(new Intent(Main2Activity.this,Main3Activity.class));
             }
         });
-
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("点击了哪一个",""+position+":"+Main2Activity.this.pids[position]+":"+Main2Activity.this.data[position]);
+                Intent intent=new Intent(Main2Activity.this,MainActivity.class);
+                intent.putExtra("pid",Main2Activity.this.pids[position]);
+                startActivity(intent);
+            }
+        });
         String weatherUrl = "http://guolin.tech/api/china";
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
             @Override
@@ -54,6 +65,7 @@ public class Main2Activity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 final String responseText=response.body().string();
                 String[] result=parseJSONObject(responseText);
+                Main2Activity.this.data=result;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -63,22 +75,25 @@ public class Main2Activity extends AppCompatActivity {
 
             }
 
-            private String[] parseJSONObject(String responseText) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(responseText);
-                    String[] result = new String[jsonArray.length()];
-                    for (int i = 0; i<jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        result[i] = jsonObject.getString("name");
-                    }
-                    return result;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
+
         });
     }
+    private String[] parseJSONObject(String responseText) {
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(responseText);
+            String[] result = new String[jsonArray.length()];
+            for (int i = 0; i<jsonArray.length(); i++) {
+                JSONObject jsonObject =null ;
+                jsonObject=jsonArray.getJSONObject(i);
+                this.data[i]=jsonObject.getString("name");
+                this.pids[i]=jsonObject.getInt("id");
 
+            }
+            return result;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
