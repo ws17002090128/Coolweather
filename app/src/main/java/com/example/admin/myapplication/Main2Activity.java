@@ -64,8 +64,7 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String responseText=response.body().string();
-                String[] result=parseJSONObject(responseText);
-                Main2Activity.this.data=result;
+                parseJSONObject(responseText);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -78,7 +77,7 @@ public class Main2Activity extends AppCompatActivity {
 
         });
     }
-    private String[] parseJSONObject(String responseText) {
+    private void parseJSONObject(String responseText) {
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(responseText);
@@ -88,12 +87,9 @@ public class Main2Activity extends AppCompatActivity {
                 jsonObject=jsonArray.getJSONObject(i);
                 this.data[i]=jsonObject.getString("name");
                 this.pids[i]=jsonObject.getInt("id");
-
             }
-            return result;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
     }
 }
