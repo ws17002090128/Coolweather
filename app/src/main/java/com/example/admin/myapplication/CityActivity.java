@@ -1,16 +1,12 @@
 package com.example.admin.myapplication;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,37 +20,34 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class Main2Activity extends AppCompatActivity {
-    private int[] pids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    private String[] data={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
+public class CityActivity extends AppCompatActivity {
+    private int[] cids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     private ListView listView;
+    private String[] data={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
     private TextView textView;
-    private Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        this.textView=(TextView)findViewById(R.id.main2);
-        this.button=(Button)findViewById(R.id.button2);
+        setContentView(R.layout.activity_main);
+        Intent intent=getIntent();
+        final int pid=intent.getIntExtra("pid",0);
+        Log.i("我们接收到的id",""+pid);
+        this.textView=(TextView)findViewById(R.id.main1);
         this.listView=(ListView)findViewById(R.id.listview);
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,data);
         listView.setAdapter(adapter);
-        this.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Main2Activity.this,Main3Activity.class));
-            }
-        });
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("点击了哪一个",""+position+":"+Main2Activity.this.pids[position]+":"+Main2Activity.this.data[position]);
-                Intent intent=new Intent(Main2Activity.this,MainActivity.class);
-                intent.putExtra("pid",Main2Activity.this.pids[position]);
+                Log.i("点击了哪一个",""+position+":"+CityActivity.this.cids[position]+":"+CityActivity.this.data[position]);
+                Intent intent=new Intent(CityActivity.this,CountyActivity.class);
+                intent.putExtra("cid",CityActivity.this.cids[position]);
+                intent.putExtra("pid",pid);
                 startActivity(intent);
             }
         });
-        String weatherUrl = "http://guolin.tech/api/china";
+        String weatherId="CN101210501";
+        String weatherUrl = "http://guolin.tech/api/china/"+pid;
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
@@ -68,13 +61,11 @@ public class Main2Activity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        textView.setText(responseText);
+                       textView.setText(responseText);
                     }
                 });
 
             }
-
-
         });
     }
     private void parseJSONObject(String responseText) {
@@ -86,7 +77,7 @@ public class Main2Activity extends AppCompatActivity {
                 JSONObject jsonObject =null ;
                 jsonObject=jsonArray.getJSONObject(i);
                 this.data[i]=jsonObject.getString("name");
-                this.pids[i]=jsonObject.getInt("id");
+                this.cids[i]=jsonObject.getInt("id");
             }
         } catch (JSONException e) {
             e.printStackTrace();
