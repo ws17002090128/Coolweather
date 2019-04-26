@@ -21,21 +21,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
-    private int[] tids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    private String[] data={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
-    private TextView textView;
+    private TextView textview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        this.textView=(TextView)findViewById(R.id.main2);
-        Intent intent=getIntent();
-//        final int cid=intent.getIntExtra("cid",0);
-//        final int pid=intent.getIntExtra("pid",0);
-//        final int did=intent.getIntExtra("did",0);
-        String weatherid=intent.getStringExtra("weatherid");
-//        Log.i("我们接收到的id",""+cid);
-        String weatherUrl = "http://guolin.tech/api/china/weather?cityid="+weatherid+"&key=637a3695bb4f4af28976a6f2795553c6";
+        this.textview=(TextView)findViewById(R.id.textview);
+        String weatherid=getIntent().getStringExtra("weatherid");
+        String weatherUrl = "http://guolin.tech/api/china/weather?cityid="+weatherid;
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
@@ -47,7 +40,7 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        textView.setText(responseText);
+                        textview.setText(responseText);
                     }
                 });
 

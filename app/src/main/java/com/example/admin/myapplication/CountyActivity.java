@@ -21,11 +21,10 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class CountyActivity extends AppCompatActivity {
-    private int[] dids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     private ListView listView;
     private String[] data={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
     private TextView textView;
-    private String weatherid;
+    private String[] weatherid={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +41,9 @@ public class CountyActivity extends AppCompatActivity {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("点击了哪一个",""+position+":"+CountyActivity.this.dids[position]+":"+CountyActivity.this.data[position]);
-                Intent intent=new Intent(CountyActivity.this,CityActivity.class);
-                intent.putExtra("pid",CountyActivity.this.dids[position]);
+                Log.i("点击了哪一个",""+position+":"+CountyActivity.this.weatherid[position]+":"+CountyActivity.this.data[position]);
+                Intent intent=new Intent(CountyActivity.this,WeatherActivity.class);
+                intent.putExtra("weatherid",CountyActivity.this.weatherid[position]);
                 intent.putExtra("cid",cid);
                 intent.putExtra("pid",pid);
                 startActivity(intent);
@@ -80,8 +79,7 @@ public class CountyActivity extends AppCompatActivity {
                 JSONObject jsonObject =null ;
                 jsonObject=jsonArray.getJSONObject(i);
                 this.data[i]=jsonObject.getString("name");
-                this.dids[i]=jsonObject.getInt("id");
-                this.weatherid=jsonObject.getString("weather_id");
+                this.weatherid[i]=jsonObject.getString("weather_id");
             }
         } catch (JSONException e) {
             e.printStackTrace();
