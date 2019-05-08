@@ -25,10 +25,10 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class ProvinceActivity extends AppCompatActivity {
-    private int[] cids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    
     private String currentlevel="province";
     private int pid=0;
-    private int[] pids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    private List<Integer> pids=new ArrayList<>();
     private List<String> data= new ArrayList<>();
     private ListView listView;
     @Override
@@ -41,8 +41,8 @@ public class ProvinceActivity extends AppCompatActivity {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("点击了哪一个",""+position+":"+ProvinceActivity.this.pids[position]+":"+ProvinceActivity.this.data.get(position));
-                pid=ProvinceActivity.this.pids[position];
+                Log.i("点击了哪一个",""+position+":"+ProvinceActivity.this.pids.get(position)+":"+ProvinceActivity.this.data.get(position));
+                pid=ProvinceActivity.this.pids.get(position);
                 currentlevel="city";
                 getData(adapter);
             }
@@ -52,13 +52,9 @@ public class ProvinceActivity extends AppCompatActivity {
     private void getData(final ArrayAdapter<String> adapter){
         String weatherUrl =currentlevel=="city"?"http://guolin.tech/api/china/"+pid:"http://guolin.tech/api/china";
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
-
-
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String responseText=response.body().string();
@@ -83,11 +79,7 @@ public class ProvinceActivity extends AppCompatActivity {
                 JSONObject jsonObject =null ;
                 jsonObject=jsonArray.getJSONObject(i);
                 this.data.add(jsonObject.getString("name"));
-                if(currentlevel=="city"){
-                    this.cids[i]=jsonObject.getInt("id");
-                }else {
-                    this.pids[i]=jsonObject.getInt("id");
-                }
+                    this.pids.add(jsonObject.getInt("id"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
