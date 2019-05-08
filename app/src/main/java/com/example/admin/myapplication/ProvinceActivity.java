@@ -16,35 +16,44 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class ProvinceActivity extends AppCompatActivity {
+    private int[] cids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    private String currentlevel="province";
+    private int pid=0;
     private int[] pids=new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    private String[] data={"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
+    private List<String> data= new ArrayList<>();
     private ListView listView;
-    private TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        this.textView=(TextView)findViewById(R.id.main2);
         this.listView=(ListView)findViewById(R.id.listview);
-        ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,data);
+        final ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,data);
         listView.setAdapter(adapter);
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("点击了哪一个",""+position+":"+ProvinceActivity.this.pids[position]+":"+ProvinceActivity.this.data[position]);
-                Intent intent=new Intent(ProvinceActivity.this,CityActivity.class);
-                intent.putExtra("pid",ProvinceActivity.this.pids[position]);
-                startActivity(intent);
+                Log.i("点击了哪一个",""+position+":"+ProvinceActivity.this.pids[position]+":"+ProvinceActivity.this.data.get(position));
+                pid=ProvinceActivity.this.pids[position];
+                currentlevel="city";
+                getData(adapter);
             }
         });
-        String weatherUrl = "http://guolin.tech/api/china";
+        getData(adapter);
+    }
+    private void getData(final ArrayAdapter<String> adapter){
+        String weatherUrl =currentlevel=="city"?"http://guolin.tech/api/china/"+pid:"http://guolin.tech/api/china";
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
+
+
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -57,25 +66,28 @@ public class ProvinceActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        textView.setText(responseText);
+                        adapter.notifyDataSetChanged();
                     }
                 });
-
             }
-
-
         });
     }
+
     private void parseJSONObject(String responseText) {
         JSONArray jsonArray = null;
+        this.data.clear();
         try {
             jsonArray = new JSONArray(responseText);
             String[] result = new String[jsonArray.length()];
             for (int i = 0; i<jsonArray.length(); i++) {
                 JSONObject jsonObject =null ;
                 jsonObject=jsonArray.getJSONObject(i);
-                this.data[i]=jsonObject.getString("name");
-                this.pids[i]=jsonObject.getInt("id");
+                this.data.add(jsonObject.getString("name"));
+                if(currentlevel=="city"){
+                    this.cids[i]=jsonObject.getInt("id");
+                }else {
+                    this.pids[i]=jsonObject.getInt("id");
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
