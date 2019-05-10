@@ -18,11 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CityActivity"
-            android:label="MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CountyActivity" />
+        <!--<activity-->
+            <!--android:name=".CityActivity"-->
+            <!--android:label="MainActivity"-->
+            <!--android:theme="@style/AppTheme.NoActionBar" />-->
+        <!--<activity android:name=".CountyActivity" />-->
         <activity android:name=".WeatherActivity"></activity>
     </application>
 

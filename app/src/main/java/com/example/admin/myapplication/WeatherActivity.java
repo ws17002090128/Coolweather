@@ -27,8 +27,9 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         this.textview=(TextView)findViewById(R.id.textview);
-        String weatherid=getIntent().getStringExtra("weatherid");
-        String weatherUrl = "http://guolin.tech/api/china/weather?cityid="+weatherid;
+        String weatherId=getIntent().getStringExtra("weatherid");
+
+        String weatherUrl = "http://guolin.tech/api/weather?cityid="+weatherId;
         HttpUtil.sendOkHttpRequest(weatherUrl,new Callback(){
             @Override
             public void onFailure(Call call, IOException e) {
